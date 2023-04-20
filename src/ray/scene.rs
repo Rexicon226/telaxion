@@ -16,9 +16,16 @@ pub trait Object: Sync {
     fn intersect(&self, ray: &Ray) -> Option<Intersection>;
 }
 
+#[derive(Copy, Clone)]
 pub struct Sphere {
     pub(crate) center: Vec3,
     pub(crate) radius: f32,
+}
+
+impl Sphere {
+    pub fn set_center(&mut self, center: Vec3) {
+        self.center = center;
+    }
 }
 
 impl Object for Sphere {
@@ -68,7 +75,7 @@ impl Scene {
     }
 
     pub(crate) fn trace(&self, ray: &Ray) -> Vec4 {
-        if let Some((intersection, object)) = self.intersect(ray) {
+        if let Some((intersection, _object)) = self.intersect(ray) {
             let light_direction = (Vec3::new(-1.0, 2.0, -1.0)).normalize();
             let diffuse_factor = intersection.normal.dot(light_direction).max(0.0);
             let color = Vec4::new(1.0, 0.5, 0.1, 1.0);
